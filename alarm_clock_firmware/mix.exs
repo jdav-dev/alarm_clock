@@ -51,7 +51,8 @@ defmodule AlarmClockFirmware.MixProject do
       {:nerves_pack, "~> 0.4.0", targets: @all_targets},
 
       # Dependencies for specific targets
-      {:nerves_system_rpi2, "~> 1.13", runtime: false, targets: :rpi2}
+      {:nerves_system_rpi2,
+       path: "../nerves_system_rpi2", runtime: false, targets: :rpi2, nerves: [compile: true]}
     ]
   end
 

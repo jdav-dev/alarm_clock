@@ -1,8 +1,8 @@
 # Used by "mix format"
 [
   inputs: [
-    "{mix,.formatter}.exs",
-    "{config,lib,test}/**/*.{ex,exs}",
+    "{mix,.formatter,.iex}.exs",
+    "{config,lib,target,test}/**/*.{ex,exs}",
     "rootfs_overlay/etc/iex.exs"
   ]
 ]

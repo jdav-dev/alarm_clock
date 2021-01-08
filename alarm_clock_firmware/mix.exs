@@ -42,8 +42,9 @@ defmodule AlarmClockFirmware.MixProject do
       {:shoehorn, "~> 0.7.0"},
       {:ring_logger, "~> 0.8.1"},
       {:toolshed, "~> 0.2.13"},
-      {:quantum, "~> 3.3"},
       {:tzdata, "~> 1.1"},
+      {:quantum, "~> 3.3"},
+      {:quantum_storage_mnesia, "~> 1.0"},
 
       # Dependencies for all targets except :host
       {:nerves_runtime, "~> 0.11.3", targets: @all_targets},

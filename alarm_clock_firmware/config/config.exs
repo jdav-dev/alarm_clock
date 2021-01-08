@@ -7,6 +7,8 @@ import Config
 
 config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
 
+config :mnesia, dir: '.mnesia/#{Mix.env()}/#{node()}'
+
 # Enable the Nerves integration with Mix
 Application.start(:nerves_bootstrap)
 
@@ -28,13 +30,10 @@ config :nerves, source_date_epoch: "1609898605"
 
 config :logger, backends: [RingLogger]
 
-time_zone = "UTC"
-
-config :alarm_clock_firmware, time_zone: time_zone
-
 config :alarm_clock_firmware, AlarmClockFirmware.Scheduler,
   overlap: false,
-  timezone: time_zone
+  run_strategy: Quantum.RunStrategy.Local,
+  storage: QuantumStorageMnesia
 
 if Mix.target() == :host or Mix.target() == :"" do
   import_config "host.exs"

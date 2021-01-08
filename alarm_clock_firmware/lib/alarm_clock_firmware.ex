@@ -1,4 +1,4 @@
-defmodule AlarmClock do
+defmodule AlarmClockFirmware do
   @moduledoc """
   Documentation for AlarmClockFirmware.
   """

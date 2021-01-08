@@ -6,6 +6,6 @@ config :alarm_clock_firmware, AlarmClockFirmware.Scheduler,
   jobs: [
     display_time: [
       schedule: "* * * * *",
-      task: {AlarmClockFirmware.MinuteLogger, :log_now, []}
+      task: {AlarmClockFirmware.TimeLogger, :log_now, []}
     ]
   ]

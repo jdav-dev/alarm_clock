@@ -5,6 +5,8 @@
 # is restricted to this project.
 import Config
 
+import_config "../../alarm_clock_ui/config/config.exs"
+
 config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
 
 config :mnesia, dir: '.mnesia/#{Mix.env()}/#{node()}'

@@ -45,6 +45,7 @@ defmodule AlarmClockFirmware.MixProject do
       {:tzdata, "~> 1.1"},
       {:quantum, "~> 3.3"},
       {:quantum_storage_mnesia, "~> 1.0"},
+      {:alarm_clock_ui, path: "../alarm_clock_ui"},
 
       # Dependencies for all targets except :host
       {:nerves_runtime, "~> 0.11.3", targets: @all_targets},

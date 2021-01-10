@@ -10,7 +10,8 @@ defmodule AlarmClockUi.MixProject do
       compilers: [:phoenix] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      preferred_cli_target: ["phx.server": :host, run: :host, test: :host]
     ]
   end
 
@@ -20,7 +21,7 @@ defmodule AlarmClockUi.MixProject do
   def application do
     [
       mod: {AlarmClockUi.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :os_mon, :runtime_tools]
     ]
   end
 

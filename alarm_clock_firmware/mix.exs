@@ -16,7 +16,7 @@ defmodule AlarmClockFirmware.MixProject do
       build_embedded: true,
       deps: deps(),
       releases: [{@app, release()}],
-      preferred_cli_target: [run: :host, test: :host]
+      preferred_cli_target: ["phx.gen.secret": :host, run: :host, test: :host]
     ]
   end
 

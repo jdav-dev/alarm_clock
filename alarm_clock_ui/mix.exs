@@ -11,7 +11,7 @@ defmodule AlarmClockUi.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
-      preferred_cli_target: ["phx.server": :host, run: :host, test: :host]
+      preferred_cli_target: ["phx.gen.secret": :host, "phx.server": :host, run: :host, test: :host]
     ]
   end
 

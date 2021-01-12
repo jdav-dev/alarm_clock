@@ -29,9 +29,11 @@ defmodule AlarmClockFirmware.MixProject do
   end
 
   defp elixirc_paths do
-    target = to_string(Mix.target())
-    target_path = Path.join("target", target)
-    ["lib", target_path]
+    if Mix.target() == :host or Mix.target() == :"" do
+      ["lib", "target/host"]
+    else
+      ["lib", "target/target"]
+    end
   end
 
   # Run "mix help deps" to learn about dependencies.
@@ -50,6 +52,8 @@ defmodule AlarmClockFirmware.MixProject do
       # Dependencies for all targets except :host
       {:nerves_runtime, "~> 0.11.3", targets: @all_targets},
       {:nerves_pack, "~> 0.4.0", targets: @all_targets},
+      {:circuits_gpio, "~> 0.4.6", targets: @all_targets},
+      {:circuits_i2c, "~> 0.3.7", targets: @all_targets},
 
       # Dependencies for specific targets
       {:nerves_system_rpi2,

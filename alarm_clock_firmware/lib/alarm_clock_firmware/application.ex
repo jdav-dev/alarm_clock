@@ -29,9 +29,9 @@ defmodule AlarmClockFirmware.Application do
 
   def children(_target) do
     [
-      # Children for all targets except host
-      # Starts a worker by calling: AlarmClockFirmware.Worker.start_link(arg)
-      # {AlarmClockFirmware.Worker, arg},
+      {AlarmClockFirmware.Led, 12},
+      {AlarmClockFirmware.Button,
+       pin_number: 5, push_fun: fn -> AlarmClockFirmware.Led.toggle(12) end}
     ]
   end
 

@@ -9,8 +9,6 @@ import_config "../../alarm_clock_ui/config/config.exs"
 
 config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
 
-config :mnesia, dir: '.mnesia/#{Mix.env()}/#{node()}'
-
 # Enable the Nerves integration with Mix
 Application.start(:nerves_bootstrap)
 

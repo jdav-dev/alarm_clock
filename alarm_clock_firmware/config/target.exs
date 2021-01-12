@@ -4,6 +4,9 @@ import Config
 # docs for separating out critical OTP applications such as those
 # involved with firmware updates.
 
+config :mnesia, dir: '/root/mnesia'
+config :tzdata, :data_dir, "/root/tzdata"
+
 config :shoehorn,
   init: [:nerves_runtime, :nerves_pack],
   app: Mix.Project.config()[:app]

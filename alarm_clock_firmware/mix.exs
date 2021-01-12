@@ -24,7 +24,7 @@ defmodule AlarmClockFirmware.MixProject do
   def application do
     [
       mod: {AlarmClockFirmware.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:inets, :logger, :runtime_tools]
     ]
   end
 

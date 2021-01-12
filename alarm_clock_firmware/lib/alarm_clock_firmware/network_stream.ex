@@ -1,7 +1,7 @@
 defmodule AlarmClockFirmware.NetworkStream do
   use GenServer
 
-  @wrapper :alarm_clock_firmware |> :code.priv_dir() |> Path.join("port_wrapper")
+  defp wrapper, do: :alarm_clock_firmware |> :code.priv_dir() |> Path.join("port_wrapper")
 
   def open(url, duration \\ :infinity)
       when (is_binary(url) and duration == :infinity) or is_integer(duration) do
@@ -30,7 +30,7 @@ defmodule AlarmClockFirmware.NetworkStream do
   @impl GenServer
   def handle_call({:open, url}, from, %{from: nil, path: path} = state) do
     port =
-      Port.open({:spawn_executable, @wrapper}, [
+      Port.open({:spawn_executable, wrapper()}, [
         {:args,
          [
            path,

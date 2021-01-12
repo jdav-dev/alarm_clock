@@ -12,10 +12,9 @@ secret_key_base =
     """
 
 config :alarm_clock_ui, AlarmClockUiWeb.Endpoint,
-  url: [host: host, port: port],
+  url: [host: System.get_env("HOST", "alarm_clock.local"), port: port],
   cache_static_manifest: "priv/static/cache_manifest.json",
   http: [
-    host: host,
     port: port,
     transport_options: [socket_opts: [:inet6]]
   ],

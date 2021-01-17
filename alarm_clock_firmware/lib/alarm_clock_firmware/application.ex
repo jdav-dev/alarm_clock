@@ -12,6 +12,7 @@ defmodule AlarmClockFirmware.Application do
 
     children =
       [
+        {Phoenix.PubSub, name: AlarmClockFirmware.PubSub},
         AlarmClockFirmware.Scheduler
       ] ++ children(target())
 
@@ -29,9 +30,8 @@ defmodule AlarmClockFirmware.Application do
 
   def children(_target) do
     [
-      {AlarmClockFirmware.Led, 12},
-      {AlarmClockFirmware.Button,
-       pin_number: 5, push_fun: fn -> AlarmClockFirmware.Led.toggle(12) end}
+      AlarmClockFirmware.Led,
+      AlarmClockFirmware.Button
     ]
   end
 

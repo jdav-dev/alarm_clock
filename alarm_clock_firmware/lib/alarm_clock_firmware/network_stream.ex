@@ -1,8 +1,6 @@
 defmodule AlarmClockFirmware.NetworkStream do
   use GenServer
 
-  defp wrapper, do: :alarm_clock_firmware |> :code.priv_dir() |> Path.join("port_wrapper")
-
   def open(url, duration \\ :infinity)
       when (is_binary(url) and duration == :infinity) or is_integer(duration) do
     with path when is_binary(path) <- System.find_executable("vlc"),
@@ -29,19 +27,22 @@ defmodule AlarmClockFirmware.NetworkStream do
 
   @impl GenServer
   def handle_call({:open, url}, from, %{from: nil, path: path} = state) do
+    timestamp = DateTime.utc_now() |> DateTime.truncate(:second) |> DateTime.to_iso8601(:basic)
+    dst = Path.join([".", "recordings", [timestamp, ".mp4"]])
+
     port =
-      Port.open({:spawn_executable, wrapper()}, [
+      Port.open({:spawn_executable, path}, [
         {:args,
          [
-           path,
            "--intf",
-           "dummy",
+           "rc",
            "--verbose",
            "2",
-           "--color",
            "--playlist-autostart",
            "--play-and-stop",
-           url
+           url,
+           "--sout",
+           "#duplicate{dst='std{access=file{no-append,no-format,no-overwrite},mux=mp4,dst=#{dst}}',dst=display}"
          ]},
         {:env, []},
         :stderr_to_stdout,

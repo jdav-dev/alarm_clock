@@ -3,7 +3,7 @@ defmodule AlarmClockFirmware.MixProject do
 
   @app :alarm_clock_firmware
   @version "0.1.0"
-  @all_targets [:rpi2]
+  @all_targets [:rpi2, :rpi3a]
 
   def project do
     [
@@ -58,7 +58,9 @@ defmodule AlarmClockFirmware.MixProject do
 
       # Dependencies for specific targets
       {:nerves_system_rpi2,
-       path: "../nerves_system_rpi2", runtime: false, targets: :rpi2, nerves: [compile: true]}
+       path: "../nerves_system_rpi2", runtime: false, targets: :rpi2, nerves: [compile: true]},
+      {:nerves_system_rpi3a,
+       path: "../nerves_system_rpi3a", runtime: false, targets: :rpi3a, nerves: [compile: true]}
     ]
   end
 

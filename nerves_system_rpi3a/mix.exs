@@ -42,7 +42,7 @@ defmodule NervesSystemRpi3a.MixProject do
     [
       type: :system,
       artifact_sites: [
-        {:github_releases, "#{@github_organization}/#{@app}"}
+        {:prefix, "https://f001.backblazeb2.com/file/nerves-artifacts-jdav-dev/"}
       ],
       build_runner_opts: build_runner_opts(),
       platform: Nerves.System.BR,

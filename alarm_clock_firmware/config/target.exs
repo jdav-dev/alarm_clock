@@ -4,6 +4,7 @@ import Config
 # docs for separating out critical OTP applications such as those
 # involved with firmware updates.
 
+config :alarm_clock_firmware, AlarmClockFirmware.NetworkStream, recordings_dir: "/root/recordings"
 config :mnesia, dir: '/root/mnesia'
 config :tzdata, :data_dir, "/root/tzdata"
 

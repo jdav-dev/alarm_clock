@@ -1,22 +1,13 @@
-defmodule AlarmClockFirmware.Button do
+defmodule AlarmClockFirmware.GpioButton do
   use GenServer
 
+  alias AlarmClockFirmware.Button
   alias Circuits.GPIO
-  alias Phoenix.PubSub
 
   @pin_number 6
-  @topic "gpio_button"
 
   def start_link(opts) do
     GenServer.start_link(__MODULE__, opts, name: __MODULE__)
-  end
-
-  def subscribe do
-    PubSub.subscribe(AlarmClockFirmware.PubSub, @topic)
-  end
-
-  def unsubscribe do
-    PubSub.unsubscribe(AlarmClockFirmware.PubSub, @topic)
   end
 
   @impl GenServer
@@ -39,12 +30,12 @@ defmodule AlarmClockFirmware.Button do
   end
 
   def handle_info({:circuits_gpio, @pin_number, _timestamp, 1}, gpio) do
-    PubSub.broadcast!(AlarmClockFirmware.PubSub, @topic, {__MODULE__, :pressed})
+    Button.press()
     {:noreply, gpio}
   end
 
   def handle_info({:circuits_gpio, @pin_number, _timestamp, 0}, gpio) do
-    PubSub.broadcast!(AlarmClockFirmware.PubSub, @topic, {__MODULE__, :released})
+    Button.release()
     {:noreply, gpio}
   end
 end

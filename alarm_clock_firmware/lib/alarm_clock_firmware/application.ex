@@ -13,6 +13,9 @@ defmodule AlarmClockFirmware.Application do
     children =
       [
         {Phoenix.PubSub, name: AlarmClockFirmware.PubSub},
+        AlarmClockFirmware.Button,
+        AlarmClockFirmware.Led,
+        AlarmClockFirmware.NetworkStream,
         AlarmClockFirmware.Scheduler
       ] ++ children(target())
 
@@ -23,15 +26,15 @@ defmodule AlarmClockFirmware.Application do
   def children(:host) do
     [
       # Children that only run on the host
-      # Starts a worker by calling: AlarmClockFirmware.Worker.start_link(arg)
-      # {AlarmClockFirmware.Worker, arg},
+      AlarmClockFirmware.LedLogger
     ]
   end
 
   def children(_target) do
     [
-      AlarmClockFirmware.Led,
-      AlarmClockFirmware.Button
+      # Children for all targets except host
+      AlarmClockFirmware.GpioButton,
+      AlarmClockFirmware.GpioLed
     ]
   end
 

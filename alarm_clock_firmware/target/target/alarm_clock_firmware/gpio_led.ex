@@ -25,12 +25,12 @@ defmodule AlarmClockFirmware.GpioLed do
     {:noreply, gpio}
   end
 
-  def handle_info({LED, :on}, gpio) do
+  def handle_info({Led, :on}, gpio) do
     GPIO.write(gpio, 1)
     {:noreply, gpio}
   end
 
-  def handle_info({LED, :off}, gpio) do
+  def handle_info({Led, :off}, gpio) do
     GPIO.write(gpio, 0)
     {:noreply, gpio}
   end

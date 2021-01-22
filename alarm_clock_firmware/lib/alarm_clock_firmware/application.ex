@@ -6,6 +6,10 @@ defmodule AlarmClockFirmware.Application do
   use Application
 
   def start(_type, _args) do
+    Memento.stop()
+    Memento.Schema.create([node()])
+    Memento.start()
+
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: AlarmClockFirmware.Supervisor]
@@ -14,18 +18,23 @@ defmodule AlarmClockFirmware.Application do
       [
         {Phoenix.PubSub, name: AlarmClockFirmware.PubSub},
         AlarmClockFirmware.Button,
+        AlarmClockFirmware.Display,
         AlarmClockFirmware.Led,
         AlarmClockFirmware.NetworkStream,
         AlarmClockFirmware.Scheduler
       ] ++ children(target())
 
-    Supervisor.start_link(children, opts)
+    with {:ok, pid} <- Supervisor.start_link(children, opts) do
+      AlarmClockFirmware.display_time("Etc/UTC")
+      {:ok, pid}
+    end
   end
 
   # List all child processes to be supervised
   def children(:host) do
     [
       # Children that only run on the host
+      AlarmClockFirmware.DisplayLogger,
       AlarmClockFirmware.LedLogger
     ]
   end
@@ -34,7 +43,8 @@ defmodule AlarmClockFirmware.Application do
     [
       # Children for all targets except host
       AlarmClockFirmware.GpioButton,
-      AlarmClockFirmware.GpioLed
+      AlarmClockFirmware.GpioLed,
+      AlarmClockFirmware.SevenSegmentDisplay
     ]
   end
 

@@ -55,6 +55,7 @@ defmodule AlarmClockFirmware.MixProject do
       {:nerves_pack, "~> 0.4.0", targets: @all_targets},
       {:circuits_gpio, "~> 0.4.6", targets: @all_targets},
       {:circuits_i2c, "~> 0.3.7", targets: @all_targets},
+      {:adafruit_led_backpack, path: "../../adafruit_led_backpack/", targets: @all_targets},
 
       # Dependencies for specific targets
       {:nerves_system_rpi2,

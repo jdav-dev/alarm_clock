@@ -1,4 +1,5 @@
 %{
+  "adafruit_led_backpack": {:git, "https://github.com/jdav-dev/adafruit_led_backpack.git", "ff668e1960832a27cfef78419c739ab6155bb0c7", [ref: "ff668e1960832a27cfef78419c739ab6155bb0c7"]},
   "certifi": {:hex, :certifi, "2.5.3", "70bdd7e7188c804f3a30ee0e7c99655bc35d8ac41c23e12325f36ab449b70651", [:rebar3], [{:parse_trans, "~>3.3", [hex: :parse_trans, repo: "hexpm", optional: false]}], "hexpm", "ed516acb3929b101208a9d700062d520f3953da3b6b918d866106ffa980e1c10"},
   "circuits_gpio": {:hex, :circuits_gpio, "0.4.6", "e4c37e49f5f76d662db90f9c4bcf51d6537681bb0dd2a00238598eb35b15e084", [:make, :mix], [{:elixir_make, "~> 0.6", [hex: :elixir_make, repo: "hexpm", optional: false]}], "hexpm", "cd2c9d7f16530d40218ccc2d2f727079439adf5df7bacc90c5a6197b40b06e9b"},
   "circuits_i2c": {:hex, :circuits_i2c, "0.3.8", "fb969ddecdfe621202725ac631a32c1315c86dd9c90e429761a64c2326b113c3", [:make, :mix], [{:elixir_make, "~> 0.6", [hex: :elixir_make, repo: "hexpm", optional: false]}], "hexpm", "396f21f8932ac957eb10b0e84ee5b090a02bcf3b5616d8599a02ce2e72722c63"},

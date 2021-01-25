@@ -11,7 +11,12 @@ defmodule AlarmClockUi.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
-      preferred_cli_target: ["phx.gen.secret": :host, "phx.server": :host, run: :host, test: :host]
+      preferred_cli_target: [
+        "phx.gen.secret": :host,
+        "phx.server": :host,
+        run: :host,
+        test: :host
+      ]
     ]
   end
 
@@ -43,7 +48,9 @@ defmodule AlarmClockUi.MixProject do
       {:telemetry_metrics, "~> 0.4"},
       {:telemetry_poller, "~> 0.4"},
       {:jason, "~> 1.0"},
-      {:plug_cowboy, "~> 2.0"}
+      {:plug_cowboy, "~> 2.0"},
+      {:adafruit_led_backpack,
+       github: "jdav-dev/adafruit_led_backpack", ref: "ff668e1960832a27cfef78419c739ab6155bb0c7"}
     ]
   end
 

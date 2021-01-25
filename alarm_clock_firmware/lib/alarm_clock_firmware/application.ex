@@ -18,7 +18,6 @@ defmodule AlarmClockFirmware.Application do
       [
         {Phoenix.PubSub, name: AlarmClockFirmware.PubSub},
         AlarmClockFirmware.Button,
-        AlarmClockFirmware.Display,
         AlarmClockFirmware.Led,
         AlarmClockFirmware.NetworkStream,
         AlarmClockFirmware.Scheduler
@@ -34,8 +33,8 @@ defmodule AlarmClockFirmware.Application do
   def children(:host) do
     [
       # Children that only run on the host
-      AlarmClockFirmware.DisplayLogger,
-      AlarmClockFirmware.LedLogger
+      AlarmClockFirmware.LedLogger,
+      {AdafruitLedBackpack.SevenSegment, [interface: AdafruitLedBackpack.Interface.PubSub]}
     ]
   end
 
@@ -44,7 +43,7 @@ defmodule AlarmClockFirmware.Application do
       # Children for all targets except host
       AlarmClockFirmware.GpioButton,
       AlarmClockFirmware.GpioLed,
-      AlarmClockFirmware.SevenSegmentDisplay
+      AdafruitLedBackpack.SevenSegment
     ]
   end
 

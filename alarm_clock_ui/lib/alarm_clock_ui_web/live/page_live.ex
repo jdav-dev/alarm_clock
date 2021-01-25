@@ -1,35 +1,40 @@
 defmodule AlarmClockUiWeb.PageLive do
   use AlarmClockUiWeb, :live_view
 
-  @impl true
+  @impl Phoenix.LiveView
+  def render(assigns) do
+    ~L"""
+    <section class="row">
+      <article class="column">
+        <h2>Button</h2>
+        <button class="button<%= unless @led, do: " button-outline"%>" phx-click="button"></button>
+      </article>
+    </section>
+
+    <section class="row">
+      <article class="column">
+        <h2>Display</h2>
+        <%= live_render @socket, AdafruitLedBackpack.SevenSegmentLive, id: "display" %>
+      </article>
+    </section>
+
+    <section class="row">
+      <article class="column">
+        <h2>Jobs</h2>
+        <pre><code><%= @jobs %></code></pre>
+      </article>
+    </section>
+    """
+  end
+
+  @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, query: "", results: %{})}
+    jobs = inspect([], pretty: true, limit: :infinity)
+    {:ok, assign(socket, display: nil, jobs: jobs, led: false, query: "")}
   end
 
-  @impl true
-  def handle_event("suggest", %{"q" => query}, socket) do
-    {:noreply, assign(socket, results: search(query), query: query)}
-  end
-
-  @impl true
-  def handle_event("search", %{"q" => query}, socket) do
-    case search(query) do
-      %{^query => vsn} ->
-        {:noreply, redirect(socket, external: "https://hexdocs.pm/#{query}/#{vsn}")}
-
-      _ ->
-        {:noreply,
-         socket
-         |> put_flash(:error, "No dependencies found matching \"#{query}\"")
-         |> assign(results: %{}, query: query)}
-    end
-  end
-
-  defp search(query) do
-    for {app, desc, vsn} <- Application.started_applications(),
-        app = to_string(app),
-        String.starts_with?(app, query) and not List.starts_with?(desc, ~c"ERTS"),
-        into: %{},
-        do: {app, vsn}
+  @impl Phoenix.LiveView
+  def handle_event("button", _params, socket) do
+    {:noreply, put_flash(socket, :info, "Button pressed")}
   end
 end

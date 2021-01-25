@@ -49,13 +49,14 @@ defmodule AlarmClockFirmware.MixProject do
       {:quantum_storage_mnesia, "~> 1.0"},
       {:alarm_clock_ui, path: "../alarm_clock_ui"},
       {:phoenix_pubsub, "~> 2.0"},
+      {:adafruit_led_backpack,
+       github: "jdav-dev/adafruit_led_backpack", ref: "ff668e1960832a27cfef78419c739ab6155bb0c7"},
 
       # Dependencies for all targets except :host
       {:nerves_runtime, "~> 0.11.3", targets: @all_targets},
       {:nerves_pack, "~> 0.4.0", targets: @all_targets},
       {:circuits_gpio, "~> 0.4.6", targets: @all_targets},
       {:circuits_i2c, "~> 0.3.7", targets: @all_targets},
-      {:adafruit_led_backpack, path: "../../adafruit_led_backpack/", targets: @all_targets},
 
       # Dependencies for specific targets
       {:nerves_system_rpi2,

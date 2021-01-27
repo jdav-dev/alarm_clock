@@ -24,7 +24,7 @@ defmodule AlarmClockFirmware.Application do
       ] ++ children(target())
 
     with {:ok, pid} <- Supervisor.start_link(children, opts) do
-      AlarmClockFirmware.display_time("Etc/UTC")
+      AlarmClockFirmware.init_display!()
       {:ok, pid}
     end
   end

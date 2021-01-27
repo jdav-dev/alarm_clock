@@ -20,4 +20,12 @@ defmodule AlarmClockFirmware do
       SevenSegment.write_display()
     end
   end
+
+  def init_display! do
+    :ok = set_brightness(0)
+    :ok = display_time("Etc/UTC")
+    :ok
+  end
+
+  defdelegate set_brightness(brightness), to: SevenSegment
 end

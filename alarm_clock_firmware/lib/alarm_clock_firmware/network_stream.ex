@@ -11,14 +11,15 @@ defmodule AlarmClockFirmware.NetworkStream do
                   |> Keyword.fetch!(:recordings_dir)
 
   @enforce_keys [:kill, :vlc]
-  defstruct from: nil, kill: nil, line: [], os_pid: nil, port: nil, vlc: nil
+  defstruct close: false, from: nil, kill: nil, line: [], port: nil, url: nil, vlc: nil
 
   @opaque t :: %__MODULE__{
+            close: boolean(),
             from: GenServer.from() | nil,
             kill: String.t(),
             line: [String.t()],
-            os_pid: non_neg_integer() | nil,
             port: port(),
+            url: String.t(),
             vlc: String.t()
           }
 
@@ -40,7 +41,7 @@ defmodule AlarmClockFirmware.NetworkStream do
   end
 
   def close do
-    GenServer.call(__MODULE__, :close)
+    GenServer.cast(__MODULE__, :close)
   end
 
   @impl GenServer
@@ -58,9 +59,99 @@ defmodule AlarmClockFirmware.NetworkStream do
   end
 
   @impl GenServer
-  def handle_call({:open, url, duration, async}, from, %__MODULE__{port: nil, vlc: vlc} = state) do
+  def handle_call({:open, url, duration, async}, from, %__MODULE__{port: nil} = state) do
     Led.on()
 
+    updated_state = open_vlc(url, state)
+
+    if is_integer(duration) do
+      Process.send_after(self(), :close, duration)
+    end
+
+    case async do
+      true -> {:reply, :ok, updated_state}
+      false -> {:noreply, %__MODULE__{updated_state | from: from}}
+    end
+  end
+
+  @impl GenServer
+  def handle_cast(:close, state) do
+    close(state)
+  end
+
+  @impl GenServer
+  def handle_info(:close, state) do
+    close(state)
+  end
+
+  def handle_info({Button, :pressed}, state) do
+    close(state)
+  end
+
+  def handle_info({Button, :released}, state) do
+    {:noreply, state}
+  end
+
+  def handle_info(
+        {port, {:data, {:noeol, next_part}}},
+        %__MODULE__{line: parts, port: port} = state
+      ) do
+    {:noreply, %__MODULE__{state | line: [parts | next_part]}}
+  end
+
+  def handle_info({port, {:data, {:eol, ""}}}, %__MODULE__{line: [], port: port} = state) do
+    # Ignore empty lines
+    {:noreply, state}
+  end
+
+  def handle_info(
+        {port, {:data, {:eol, last_part}}},
+        %__MODULE__{close: close, line: parts, port: port} = state
+      ) do
+    Logger.debug([parts | last_part])
+
+    updated_state = %__MODULE__{state | line: []}
+
+    if !close and last_part =~ "nothing to play" do
+      close(updated_state, false)
+    else
+      {:noreply, updated_state}
+    end
+  end
+
+  def handle_info(
+        {:EXIT, port, reason},
+        %__MODULE__{close: close, from: from, port: port, url: url} = state
+      ) do
+    case close do
+      true ->
+        Led.off()
+
+        case reason do
+          :normal -> from && GenServer.reply(from, :ok)
+          not_normal -> from && GenServer.reply(from, {:error, not_normal})
+        end
+
+        {:noreply, %__MODULE__{state | close: false, port: nil}}
+
+      false ->
+        Logger.warn("VLC exited unexpectedly.  Restarting.")
+        {:noreply, %__MODULE__{open_vlc(url, state) | close: false}}
+    end
+  end
+
+  def handle_info({:EXIT, _port, :normal}, state) do
+    # Probably the call to kill
+    {:noreply, state}
+  end
+
+  @impl GenServer
+  def terminate(reason, %{from: from} = state) do
+    from && GenServer.reply(from, {:error, {:exit, reason}})
+    close(state)
+  end
+
+  defp open_vlc(url, %__MODULE__{vlc: vlc} = state) do
     timestamp = DateTime.utc_now() |> DateTime.truncate(:second) |> DateTime.to_iso8601(:basic)
     dst = Path.join(@recordings_dir, [timestamp, ".mp4"])
 
@@ -81,75 +172,20 @@ defmodule AlarmClockFirmware.NetworkStream do
         {:env, []},
         :stderr_to_stdout,
         :binary,
-        {:line, 64},
-        :exit_status
+        {:line, 64}
       ])
 
-    {:os_pid, os_pid} = Port.info(port, :os_pid)
+    %__MODULE__{state | port: port, url: url}
+  end
 
-    if is_integer(duration) do
-      Process.send_after(self(), :close, duration)
+  defp close(%__MODULE__{kill: kill, port: port} = state, expected \\ true) do
+    case Port.info(port, :os_pid) do
+      {:os_pid, os_pid} ->
+        System.cmd(kill, [to_string(os_pid)])
+        {:noreply, %__MODULE__{state | close: expected}}
+
+      nil ->
+        {:noreply, %__MODULE__{state | close: expected, port: nil}}
     end
-
-    case async do
-      true -> {:reply, :ok, %__MODULE__{state | os_pid: os_pid, port: port}}
-      false -> {:noreply, %__MODULE__{state | from: from, os_pid: os_pid, port: port}}
-    end
-  end
-
-  def handle_call(:close, _from, state) do
-    close(state)
-    {:stop, :normal, :ok, state}
-  end
-
-  @impl GenServer
-  def handle_info(
-        {port, {:data, {:noeol, next_part}}},
-        %__MODULE__{line: parts, port: port} = state
-      ) do
-    {:noreply, %__MODULE__{state | line: [parts | next_part]}}
-  end
-
-  def handle_info(
-        {port, {:data, {:eol, last_part}}},
-        %__MODULE__{line: parts, port: port} = state
-      ) do
-    Logger.debug([parts | last_part])
-    {:noreply, %__MODULE__{state | line: []}}
-  end
-
-  def handle_info({port, {:exit_status, status}}, %__MODULE__{from: from, port: port} = state) do
-    from && GenServer.reply(from, {:error, status})
-    {:stop, :normal, state}
-  end
-
-  def handle_info(:close, state) do
-    close(state)
-    {:stop, :normal, state}
-  end
-
-  def handle_info({Button, :pressed}, state) do
-    handle_info(:close, state)
-  end
-
-  def handle_info({Button, :released}, state) do
-    {:noreply, state}
-  end
-
-  @impl GenServer
-  def terminate(_reason, state) do
-    close(state)
-  end
-
-  defp close(%__MODULE__{from: from, kill: kill, os_pid: os_pid, port: port})
-       when is_port(port) do
-    Led.off()
-    Port.close(port)
-    System.cmd(kill, [to_string(os_pid)])
-    from && GenServer.reply(from, :ok)
-  end
-
-  defp close(_state) do
-    # No port was open
   end
 end

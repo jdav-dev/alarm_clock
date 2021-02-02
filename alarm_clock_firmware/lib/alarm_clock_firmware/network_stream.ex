@@ -53,8 +53,8 @@ defmodule AlarmClockFirmware.NetworkStream do
       Process.flag(:trap_exit, true)
       {:ok, %__MODULE__{kill: kill, vlc: vlc}}
     else
-      nil -> {:error, :missing_vlc_or_kill}
-      error -> error
+      nil -> {:stop, {:error, :missing_vlc_or_kill}}
+      error -> {:stop, error}
     end
   end
 

@@ -3,7 +3,7 @@ defmodule AlarmClockFirmware.MixProject do
 
   @app :alarm_clock_firmware
   @version "0.1.0"
-  @all_targets [:rpi2, :rpi3, :rpi3a]
+  @all_targets [:rpi3]
 
   def project do
     [
@@ -40,7 +40,7 @@ defmodule AlarmClockFirmware.MixProject do
   defp deps do
     [
       # Dependencies for all targets
-      {:nerves, "~> 1.7.0", runtime: false},
+      {:nerves, "~> 1.6.0", runtime: false},
       {:shoehorn, "~> 0.7.0"},
       {:ring_logger, "~> 0.8.1"},
       {:toolshed, "~> 0.2.13"},
@@ -57,14 +57,10 @@ defmodule AlarmClockFirmware.MixProject do
       {:nerves_pack, "~> 0.4.0", targets: @all_targets},
       {:circuits_gpio, "~> 0.4.6", targets: @all_targets},
       {:circuits_i2c, "~> 0.3.7", targets: @all_targets},
+      {:pigpiox, "~> 0.1.2", targets: @all_targets},
 
       # Dependencies for specific targets
-      {:nerves_system_rpi2,
-       path: "../nerves_system_rpi2", runtime: false, targets: :rpi2, nerves: [compile: true]},
-      {:nerves_system_rpi3,
-       path: "../nerves_system_rpi3", runtime: false, targets: :rpi3, nerves: [compile: true]},
-      {:nerves_system_rpi3a,
-       path: "../nerves_system_rpi3a", runtime: false, targets: :rpi3a, nerves: [compile: true]}
+      {:alarm_clock_rpi3, github: "jdav-dev/alarm_clock_rpi3", ref: "v1.12.2", targets: :rpi3}
     ]
   end
 

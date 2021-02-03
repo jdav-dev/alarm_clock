@@ -166,6 +166,9 @@ defmodule AlarmClockFirmware.NetworkStream do
            "--playlist-autostart",
            "--play-and-stop",
            url,
+           "--sout-mono-downmix",
+           "--sout-mono-channel",
+           "0",
            "--sout",
            "#duplicate{dst='std{access=file{no-append,no-format,no-overwrite},mux=mp4,dst=#{dst}}',dst=display}"
          ]},

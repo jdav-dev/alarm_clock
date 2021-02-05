@@ -24,7 +24,7 @@ defmodule AlarmClockFirmware.Application do
       ] ++ children(target())
 
     with {:ok, pid} <- Supervisor.start_link(children, opts) do
-      AlarmClockFirmware.init_display!()
+      AlarmClockFirmware.init!()
       {:ok, pid}
     end
   end

@@ -5,6 +5,8 @@ defmodule AlarmClockFirmware do
 
   alias AdafruitLedBackpack.SevenSegment
 
+  @asound_state "/root/asound.state"
+
   def display_time(time_zone) do
     now = DateTime.utc_now()
 
@@ -21,11 +23,30 @@ defmodule AlarmClockFirmware do
     end
   end
 
-  def init_display! do
+  def init! do
+    restore_volume()
     :ok = set_brightness(0)
     :ok = display_time("Etc/UTC")
     :ok
   end
 
   defdelegate set_brightness(brightness), to: SevenSegment
+
+  def restore_volume do
+    case System.cmd("/usr/sbin/alsactl", ["--file", @asound_state, "restore"]) do
+      {_result, 0} -> :ok
+      error -> {:error, error}
+    end
+  end
+
+  def set_volume(volume) when volume in 0..255 do
+    with {_result, 0} <-
+           System.cmd("/usr/bin/amixer", ["--card", "0", "sset", "'PCM',0", to_string(volume)]),
+         {_result, 0} <-
+           System.cmd("/usr/sbin/alsactl", ["--file", @asound_state, "store"]) do
+      :ok
+    else
+      error -> {:error, error}
+    end
+  end
 end

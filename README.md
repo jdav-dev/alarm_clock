@@ -2,17 +2,32 @@
 
 [Nerves](https://www.nerves-project.org/) project for an alarm clock that plays network streams.
 
-## Git subtree reference
+## Targets
 
-```sh
-git remote add -f nerves_system_rpi3 https://github.com/nerves-project/nerves_system_rpi3.git
-```
+Nerves applications produce images for hardware targets based on the
+`MIX_TARGET` environment variable. If `MIX_TARGET` is unset, `mix` builds an
+image that runs on the host (e.g., your laptop). This is useful for executing
+logic tests, running utilities, and debugging. Other targets are represented by
+a short name like `rpi3` that maps to a Nerves system image for that platform.
+All of this logic is in the generated `mix.exs` and may be customized. For more
+information about targets see:
 
-```sh
-git subtree add --prefix nerves_system_rpi3 nerves_system_rpi3 v1.13.3 --squash
-```
+https://hexdocs.pm/nerves/targets.html#content
 
-```sh
-git fetch nerves_system_rpi3 v1.13.3
-git subtree pull --prefix nerves_system_rpi3 nerves_system_rpi3 v1.13.3 --squash
-```
+## Getting Started
+
+To start your Nerves app:
+
+- `export MIX_TARGET=my_target` or prefix every command with
+  `MIX_TARGET=my_target`. For example, `MIX_TARGET=rpi3`
+- Install dependencies with `mix deps.get`
+- Create firmware with `mix firmware`
+- Burn to an SD card with `mix firmware.burn`
+
+## Learn more
+
+- Official docs: <https://hexdocs.pm/nerves/getting-started.html>
+- Official website: <https://nerves-project.org/>
+- Forum: <https://elixirforum.com/c/nerves-forum>
+- Discussion Slack elixir-lang #nerves ([Invite](https://elixir-slackin.herokuapp.com/))
+- Source: <https://github.com/nerves-project/nerves>

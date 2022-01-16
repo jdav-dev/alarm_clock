@@ -175,7 +175,7 @@ defmodule AlarmClock.NetworkStream do
         {:env, []},
         :stderr_to_stdout,
         :binary,
-        {:line, 64}
+        {:line, 63}
       ])
 
     %__MODULE__{state | port: port, url: url}

@@ -25,7 +25,7 @@ if Code.ensure_loaded?(Circuits.GPIO) do
 
     @impl GenServer
     def handle_info(:init_gpio, gpio) do
-      GPIO.set_pull_mode(gpio, :pulldown)
+      GPIO.set_pull_mode(gpio, :pullup)
       GPIO.set_interrupts(gpio, :both)
       {:noreply, gpio}
     end

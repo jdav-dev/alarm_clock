@@ -33,11 +33,8 @@ npm-debug.log
 # this depending on your deployment strategy.
 /priv/static/
 
-# Ignore Mnesia files
-/.mnesia/
-
 # Ignore local IEX config
 .iex.exs
 
-# Ignore network stream recordings
-/recordings/
+# Ignore local data dir
+/.data/

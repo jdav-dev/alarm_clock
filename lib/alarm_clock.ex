@@ -20,6 +20,9 @@ defmodule AlarmClock do
     :ok
   end
 
+  # If the @asound_state file doesn't exist, we MUST play a file with `aplay` before the sound
+  # card is visible to `amixer`.  The played file can be empty.  Then set the default volume and
+  # write the initial @asound_state file.
   def restore_volume do
     case System.cmd("/usr/sbin/alsactl", ["--file", @asound_state, "restore"],
            env: [],

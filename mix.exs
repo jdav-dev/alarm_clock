@@ -3,7 +3,7 @@ defmodule AlarmClock.MixProject do
 
   @app :alarm_clock
   @version "0.1.0"
-  @all_targets [:rpi3]
+  @all_targets [:rpi3, :rpi3a]
 
   def project do
     [
@@ -65,13 +65,15 @@ defmodule AlarmClock.MixProject do
 
       # Dependencies for all targets except :host
       {:nerves_runtime, "~> 0.11.3", targets: @all_targets},
-      {:nerves_pack, "~> 0.4.0", targets: @all_targets},
+      {:nerves_pack, "~> 0.6.0", targets: @all_targets},
       {:circuits_gpio, "~> 0.4.6", targets: @all_targets},
       {:circuits_i2c, "~> 0.3.7", targets: @all_targets},
 
       # Dependencies for specific targets
       {:alarm_clock_rpi3,
-       github: "jdav-dev/alarm_clock_rpi3", ref: "v1.13.3", runtime: false, targets: :rpi3},
+       github: "jdav-dev/alarm_clock_rpi3", ref: "v1.18.1", runtime: false, targets: :rpi3},
+      {:alarm_clock_rpi3a,
+       github: "jdav-dev/alarm_clock_rpi3a", ref: "v1.18.1", runtime: false, targets: :rpi3a},
       {:phoenix_live_reload, "~> 1.2", only: :dev, targets: :host}
     ]
   end

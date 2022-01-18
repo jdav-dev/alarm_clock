@@ -3,34 +3,22 @@ defmodule AlarmClock do
   Documentation for AlarmClock.
   """
 
-  alias AdafruitLedBackpack.SevenSegment
+  alias AlarmClock.Display
 
   @asound_state "/root/asound.state"
 
   def display_time(time_zone) do
-    now = DateTime.utc_now()
-
-    value =
-      now
-      |> DateTime.shift_zone!(time_zone)
-      |> Calendar.strftime("%I%M")
-      |> String.trim_leading("0")
-
-    with :ok <- SevenSegment.clear(),
-         :ok <- SevenSegment.print_number_str(value),
-         :ok <- SevenSegment.set_colon(:on) do
-      SevenSegment.write_display()
-    end
+    time_zone
+    |> DateTime.now!()
+    |> Display.show(:colon)
   end
 
   def init! do
     restore_volume()
-    :ok = set_brightness(0)
-    :ok = display_time("Etc/UTC")
+    :ok = Display.set_brightness(0)
+    :ok = display_time("America/New_York")
     :ok
   end
-
-  defdelegate set_brightness(brightness), to: SevenSegment
 
   def restore_volume do
     case System.cmd("/usr/sbin/alsactl", ["--file", @asound_state, "restore"],

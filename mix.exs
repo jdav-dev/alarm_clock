@@ -60,8 +60,6 @@ defmodule AlarmClock.MixProject do
       {:quantum, "~> 3.3"},
       {:quantum_storage_mnesia, "~> 1.0"},
       {:phoenix_pubsub, "~> 2.0"},
-      {:adafruit_led_backpack,
-       github: "jdav-dev/adafruit_led_backpack", ref: "ff668e1960832a27cfef78419c739ab6155bb0c7"},
 
       # Dependencies for all targets except :host
       {:nerves_runtime, "~> 0.11.3", targets: @all_targets},

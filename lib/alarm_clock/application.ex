@@ -45,17 +45,16 @@ defmodule AlarmClock.Application do
   def children(:host) do
     [
       # Children that only run on the host
-      AlarmClock.LedLogger,
-      {AdafruitLedBackpack.SevenSegment, [interface: AdafruitLedBackpack.Interface.PubSub]}
+      AlarmClock.LedLogger
     ]
   end
 
   def children(_target) do
     [
       # Children for all targets except host
+      AlarmClock.Display,
       AlarmClock.GpioButton,
-      AlarmClock.GpioLed,
-      AdafruitLedBackpack.SevenSegment
+      AlarmClock.GpioLed
     ]
   end
 

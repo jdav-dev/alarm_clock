@@ -14,7 +14,6 @@ defmodule AlarmClockWeb.PageLive do
     <section class="row">
       <article class="column">
         <h2>Display</h2>
-        <%= live_render @socket, AdafruitLedBackpack.SevenSegmentLive, id: "display" %>
       </article>
     </section>
 

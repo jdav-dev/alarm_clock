@@ -24,7 +24,7 @@ config :nerves_runtime, :kernel, use_system_registry: false
 
 config :nerves,
   erlinit: [
-    hostname_pattern: "nerves-%s"
+    hostname_pattern: "alarm_clock-%s"
   ]
 
 # Configure the device for SSH IEx prompt access and firmware updates
@@ -99,7 +99,7 @@ config :mdns_lite,
   # "nerves.local" for convenience. If more than one Nerves device is on the
   # network, delete "nerves" from the list.
 
-  host: [:hostname, "nerves"],
+  host: [:hostname, "alarm_clock"],
   ttl: 120,
 
   # Advertise the following services over mDNS.

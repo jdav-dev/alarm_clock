@@ -14,9 +14,13 @@ defmodule AlarmClock do
         false -> [:colon, :degree]
       end
 
-    time_zone
-    |> DateTime.now!()
-    |> Display.show(opts)
+    now = DateTime.now!(time_zone)
+
+    if Time.compare(now, ~T[06:15:00]) == :lt or Time.compare(now, ~T[21:00:00]) == :gt do
+      Display.show("", opts)
+    else
+      Display.show(now, opts)
+    end
   end
 
   def init! do

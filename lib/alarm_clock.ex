@@ -8,9 +8,15 @@ defmodule AlarmClock do
   @asound_state "/root/asound.state"
 
   def display_time(time_zone) do
+    opts =
+      case NervesTime.synchronized?() do
+        true -> :colon
+        false -> [:colon, :degree]
+      end
+
     time_zone
     |> DateTime.now!()
-    |> Display.show(:colon)
+    |> Display.show(opts)
   end
 
   def init! do
@@ -33,9 +39,9 @@ defmodule AlarmClock do
     end
   end
 
-  def set_volume(volume) when volume in 0..255 do
+  def set_volume(volume) when volume in 0..100 do
     with {_result, 0} <-
-           System.cmd("/usr/bin/amixer", ["--card", "0", "sset", "'PCM',0", to_string(volume)]),
+           System.cmd("/usr/bin/amixer", ["--card", "0", "sset", "'PCM',0", "#{volume}%"]),
          {_result, 0} <-
            System.cmd("/usr/sbin/alsactl", ["--file", @asound_state, "store"]) do
       :ok

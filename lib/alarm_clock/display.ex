@@ -60,7 +60,7 @@ defmodule AlarmClock.Display do
       end
 
     date_time
-    |> Calendar.strftime("%I%M")
+    |> Calendar.strftime("%-I%M")
     |> then(&show(bus, &1, opts))
   end
 
